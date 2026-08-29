@@ -13,54 +13,46 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-<script src="https://unpkg.com/html5-qrcode" ></script>
+<script src="https://unpkg.com/html5-qrcode"></script>
 
 <style>
-/* ============ Tokens — deliberately distinct from any prior build:
-   charcoal + amber "lab scanner" identity, monospace accents, no glass/neon. ============ */
 :root{
-  --bg:#111116;
-  --bg-2:#17181f;
-  --panel:rgba(255,255,255,.035);
-  --panel-strong:rgba(255,255,255,.065);
+  --bg:#111116; --bg-2:#17181f;
+  --panel:rgba(255,255,255,.035); --panel-strong:rgba(255,255,255,.065);
   --border:rgba(255,255,255,.11);
-  --text:#f3f1ea;
-  --text-dim:rgba(243,241,234,.6);
-  --accent:#ffb020;
-  --accent-soft:rgba(255,176,32,.15);
-  --mint:#3ddc97;
-  --mint-soft:rgba(61,220,151,.14);
-  --danger:#ff6b6b;
-  --danger-soft:rgba(255,107,107,.14);
-  --radius:16px;
-  --mono:'Space Mono', monospace;
-  --sans:'Inter', system-ui, sans-serif;
+  --text:#f3f1ea; --text-dim:rgba(243,241,234,.6);
+  --accent:#ffb020; --accent-soft:rgba(255,176,32,.15);
+  --mint:#3ddc97; --mint-soft:rgba(61,220,151,.14);
+  --danger:#ff6b6b; --danger-soft:rgba(255,107,107,.14);
+  --radius:16px; --mono:'Space Mono', monospace; --sans:'Inter', system-ui, sans-serif;
 }
-
 *{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
 body{
-  font-family:var(--sans);background:var(--bg);color:var(--text);
-  min-height:100dvh;line-height:1.5;
-  background-image:
-    radial-gradient(circle at 12% 8%, rgba(255,176,32,.06) 0%, transparent 40%),
-    radial-gradient(circle at 88% 92%, rgba(61,220,151,.05) 0%, transparent 42%);
+  font-family:var(--sans);background:var(--bg);color:var(--text);min-height:100dvh;line-height:1.5;
+  background-image:radial-gradient(circle at 12% 8%, rgba(255,176,32,.06) 0%, transparent 40%),
+                    radial-gradient(circle at 88% 92%, rgba(61,220,151,.05) 0%, transparent 42%);
 }
 img,svg{display:block;}
-
-/* faint scanline texture across whole page — ties to the scanner theme */
-body::before{
-  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
-  background:repeating-linear-gradient(180deg, rgba(255,255,255,.012) 0px, rgba(255,255,255,.012) 1px, transparent 1px, transparent 3px);
-  opacity:.5;
-}
-
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:repeating-linear-gradient(180deg, rgba(255,255,255,.012) 0px, rgba(255,255,255,.012) 1px, transparent 1px, transparent 3px);opacity:.5;}
 .wrap{position:relative;z-index:1;max-width:640px;margin:0 auto;padding:0 16px 40px;}
 
-/* ============ Header ============ */
+/* ============ Header + animated logo ============ */
 header{padding:22px 0 10px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
-.brand{display:flex;align-items:center;gap:10px;}
-.brand svg{width:34px;height:34px;}
+.brand{display:flex;align-items:center;gap:11px;}
+.brand-logo{width:42px;height:42px;position:relative;flex-shrink:0;border-radius:11px;background:#1c1d24;border:1px solid #2a2b33;overflow:hidden;animation:logoPulse 3.2s ease-in-out infinite;}
+.brand-logo .dots{position:absolute;inset:9px;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);gap:2px;}
+.brand-logo .dots span{background:rgba(255,255,255,.3);border-radius:1px;}
+.brand-logo .dots span.on{background:rgba(255,255,255,.6);}
+.brand-logo .corner{position:absolute;width:10px;height:10px;border:2px solid var(--accent);}
+.brand-logo .corner.tl{top:2px;left:2px;border-right:none;border-bottom:none;}
+.brand-logo .corner.tr{top:2px;right:2px;border-left:none;border-bottom:none;}
+.brand-logo .corner.bl{bottom:2px;left:2px;border-right:none;border-top:none;}
+.brand-logo .corner.br{bottom:2px;right:2px;border-left:none;border-top:none;}
+.brand-logo .beam{position:absolute;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent);box-shadow:0 0 6px var(--accent);animation:logoSweep 2.4s cubic-bezier(.45,0,.55,1) infinite;}
+@keyframes logoSweep{0%{top:8%;}50%{top:86%;}100%{top:8%;}}
+@keyframes logoPulse{0%,100%{box-shadow:0 0 0 0 rgba(255,176,32,0);}50%{box-shadow:0 0 0 5px rgba(255,176,32,.12);}}
 .brand-text .name{font-family:var(--mono);font-weight:700;font-size:1.15rem;letter-spacing:.5px;}
 .brand-text .tag{font-size:.72rem;color:var(--text-dim);letter-spacing:1px;text-transform:uppercase;}
 
@@ -69,6 +61,11 @@ header{padding:22px 0 10px;display:flex;align-items:center;justify-content:space
 .hero h1{font-size:1.5rem;font-weight:800;margin-bottom:6px;letter-spacing:-.3px;}
 .hero p{color:var(--text-dim);font-size:.92rem;max-width:52ch;}
 
+/* ============ Insecure-context banner ============ */
+.warn-banner{display:none;align-items:flex-start;gap:9px;background:var(--danger-soft);border:1px solid rgba(255,107,107,.4);color:#ffb3b3;border-radius:12px;padding:12px 14px;font-size:.8rem;margin-bottom:16px;}
+.warn-banner.show{display:flex;}
+.warn-banner svg{width:17px;height:17px;flex-shrink:0;margin-top:1px;color:var(--danger);}
+
 /* ============ Card shell ============ */
 .card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:18px;}
 .card h2{font-size:.78rem;font-family:var(--mono);text-transform:uppercase;letter-spacing:1.5px;color:var(--accent);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
@@ -76,7 +73,7 @@ header{padding:22px 0 10px;display:flex;align-items:center;justify-content:space
 
 /* ============ Mode tabs ============ */
 .mode-tabs{display:flex;background:var(--bg-2);border:1px solid var(--border);border-radius:12px;padding:4px;gap:4px;margin-bottom:14px;}
-.mode-tab{flex:1;padding:10px;border:none;background:transparent;color:var(--text-dim);border-radius:9px;cursor:pointer;font-weight:700;font-size:.85rem;display:flex;align-items:center;justify-content:center;gap:6px;transition:.2s;}
+.mode-tab{flex:1;padding:9px 4px;border:none;background:transparent;color:var(--text-dim);border-radius:9px;cursor:pointer;font-weight:700;font-size:.78rem;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;transition:.2s;}
 .mode-tab.active{background:var(--accent-soft);color:var(--accent);}
 .mode-tab svg{width:16px;height:16px;stroke:currentColor;}
 
@@ -86,13 +83,14 @@ select#camera-select{flex:1;min-width:140px;padding:10px 12px;border-radius:10px
 .icon-toggle{width:42px;height:42px;flex-shrink:0;border-radius:10px;border:1px solid var(--border);background:var(--bg-2);color:var(--text-dim);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s;}
 .icon-toggle svg{width:18px;height:18px;stroke:currentColor;}
 .icon-toggle.on{background:var(--accent-soft);color:var(--accent);border-color:var(--accent);}
+.icon-toggle:disabled{opacity:.4;cursor:not-allowed;}
 
 /* ============ Viewfinder ============ */
 .viewfinder{position:relative;width:100%;aspect-ratio:1/1;max-width:400px;margin:0 auto;border-radius:14px;overflow:hidden;background:#000;border:1px solid var(--border);}
 #reader{width:100%;height:100%;}
 #reader video{width:100% !important;height:100% !important;object-fit:cover;}
-#reader img{width:100%;}
-.viewfinder .frame{position:absolute;inset:14%;pointer-events:none;z-index:2;}
+.viewfinder .frame{position:absolute;inset:14%;pointer-events:none;z-index:2;display:none;}
+.viewfinder.scanning .frame{display:block;}
 .corner{position:absolute;width:26px;height:26px;border:3px solid var(--accent);}
 .corner.tl{top:0;left:0;border-right:none;border-bottom:none;border-radius:6px 0 0 0;}
 .corner.tr{top:0;right:0;border-left:none;border-bottom:none;border-radius:0 6px 0 0;}
@@ -100,17 +98,29 @@ select#camera-select{flex:1;min-width:140px;padding:10px 12px;border-radius:10px
 .corner.br{bottom:0;right:0;border-left:none;border-top:none;border-radius:0 0 6px 0;}
 .scan-line{position:absolute;left:0;right:0;height:2px;background:linear-gradient(90deg, transparent, var(--accent), transparent);box-shadow:0 0 10px var(--accent);animation:sweep 2.4s ease-in-out infinite;}
 @keyframes sweep{0%{top:2%;opacity:.9;}50%{top:96%;opacity:.5;}100%{top:2%;opacity:.9;}}
-.viewfinder.idle .frame,.viewfinder.idle .scan-line{display:none;}
-.viewfinder .idle-msg{position:absolute;inset:0;display:none;align-items:center;justify-content:center;text-align:center;color:var(--text-dim);font-size:.85rem;padding:20px;}
-.viewfinder.idle .idle-msg{display:flex;}
 
-/* ============ Upload zone ============ */
-.upload-zone{display:none;flex-direction:column;align-items:center;justify-content:center;gap:10px;border:2px dashed var(--border);border-radius:14px;padding:36px 20px;cursor:pointer;transition:.2s;text-align:center;}
-.upload-zone.active{display:flex;}
-.upload-zone:hover{border-color:var(--accent);background:var(--accent-soft);}
-.upload-zone svg{width:34px;height:34px;color:var(--accent);}
-.upload-zone span{font-size:.85rem;color:var(--text-dim);}
-#file-input{display:none;}
+.vf-overlay{position:absolute;inset:0;z-index:3;display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:rgba(8,8,10,.86);padding:24px;text-align:center;}
+.vf-overlay.show{display:flex;}
+.vf-overlay svg{width:38px;height:38px;color:var(--accent);}
+.vf-overlay p{font-size:.85rem;color:var(--text-dim);max-width:26ch;}
+.vf-overlay .err-text{color:#ffb3b3;}
+.vf-btn{padding:11px 20px;border-radius:10px;border:none;background:var(--accent);color:#1a1200;font-weight:800;font-size:.85rem;cursor:pointer;display:flex;align-items:center;gap:7px;}
+.vf-btn:hover{opacity:.9;}
+.vf-btn svg{width:16px;height:16px;color:#1a1200;}
+
+.scan-hint{display:none;align-items:center;gap:8px;background:var(--accent-soft);border:1px solid rgba(255,176,32,.35);color:var(--accent);border-radius:10px;padding:9px 12px;font-size:.76rem;margin-top:10px;}
+.scan-hint.show{display:flex;}
+.scan-hint svg{width:15px;height:15px;flex-shrink:0;}
+.scan-hint button{margin-inline-start:auto;background:none;border:none;color:inherit;cursor:pointer;font-size:1rem;line-height:1;flex-shrink:0;}
+
+/* ============ Photo / Upload zones ============ */
+.capture-zone{display:none;flex-direction:column;align-items:center;justify-content:center;gap:10px;border:2px dashed var(--border);border-radius:14px;padding:36px 20px;cursor:pointer;transition:.2s;text-align:center;}
+.capture-zone.active{display:flex;}
+.capture-zone:hover{border-color:var(--accent);background:var(--accent-soft);}
+.capture-zone svg{width:34px;height:34px;color:var(--accent);}
+.capture-zone span{font-size:.85rem;color:var(--text-dim);}
+.capture-zone small{color:var(--text-dim);font-size:.72rem;opacity:.8;}
+input[type="file"]{display:none;}
 
 /* ============ Start/stop button ============ */
 .scan-btn{width:100%;margin-top:14px;padding:14px;border-radius:12px;border:none;background:var(--accent);color:#1a1200;font-weight:800;font-size:.95rem;cursor:pointer;transition:.2s;display:flex;align-items:center;justify-content:center;gap:8px;}
@@ -138,13 +148,13 @@ select#camera-select{flex:1;min-width:140px;padding:10px 12px;border-radius:10px
 
 /* ============ History ============ */
 .history-list{display:flex;flex-direction:column;gap:8px;max-height:280px;overflow-y:auto;}
-.history-item{display:flex;align-items:center;gap:10px;background:var(--bg-2);border:1px solid var(--border);border-radius:10px;padding:10px 12px;}
+.history-item{display:flex;align-items:center;gap:10px;background:var(--bg-2);border:1px solid var(--border);border-radius:10px;padding:10px 12px;cursor:pointer;}
 .history-item .htype{font-family:var(--mono);font-size:.62rem;color:var(--accent);background:var(--accent-soft);padding:2px 7px;border-radius:20px;flex-shrink:0;}
 .history-item .htext{flex:1;font-size:.8rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .history-item .htime{font-size:.68rem;color:var(--text-dim);flex-shrink:0;}
-.history-item button{background:transparent;border:none;color:var(--text-dim);cursor:pointer;padding:4px;}
-.history-item button:hover{color:var(--danger);}
-.history-item button svg{width:15px;height:15px;}
+.history-item button.del{background:transparent;border:none;color:var(--text-dim);cursor:pointer;padding:4px;}
+.history-item button.del:hover{color:var(--danger);}
+.history-item button.del svg{width:15px;height:15px;}
 .empty-note{color:var(--text-dim);font-size:.82rem;text-align:center;padding:14px 0;}
 .history-footer{display:flex;justify-content:flex-end;margin-top:10px;}
 .history-footer button{background:none;border:none;color:var(--text-dim);font-size:.75rem;cursor:pointer;text-decoration:underline;}
@@ -179,6 +189,7 @@ footer .sep{opacity:.4;margin:0 6px;}
 @media (max-width:480px){
   .features-grid{grid-template-columns:1fr;}
   .hero h1{font-size:1.3rem;}
+  .mode-tab{font-size:.7rem;}
 }
 </style>
 </head>
@@ -187,16 +198,16 @@ footer .sep{opacity:.4;margin:0 6px;}
 
   <header>
     <div class="brand">
-      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-        <rect width="64" height="64" rx="14" fill="#17181f" stroke="#26272f"/>
-        <g fill="none" stroke="#ffb020" stroke-width="5" stroke-linecap="round">
-          <path d="M12 22V16a4 4 0 0 1 4-4h6"/>
-          <path d="M52 22V16a4 4 0 0 0-4-4h-6"/>
-          <path d="M12 42v6a4 4 0 0 0 4 4h6"/>
-          <path d="M52 42v6a4 4 0 0 1-4 4h-6"/>
-          <line x1="12" y1="32" x2="52" y2="32"/>
-        </g>
-      </svg>
+      <div class="brand-logo">
+        <div class="dots">
+          <span class="on"></span><span></span><span class="on"></span>
+          <span></span><span class="on"></span><span></span>
+          <span class="on"></span><span></span><span class="on"></span>
+        </div>
+        <span class="corner tl"></span><span class="corner tr"></span>
+        <span class="corner bl"></span><span class="corner br"></span>
+        <div class="beam"></div>
+      </div>
       <div class="brand-text">
         <div class="name">SCANNER_MC88</div>
         <div class="tag">QR &amp; Barcode Reader</div>
@@ -206,7 +217,12 @@ footer .sep{opacity:.4;margin:0 6px;}
 
   <div class="hero">
     <h1>Scan anything. Instantly.</h1>
-    <p>Point your camera at a QR code or barcode — or upload a photo — to decode it in your browser. Nothing is uploaded to any server.</p>
+    <p>Point your camera at a QR code or barcode, snap a photo with your phone's camera app, or upload an image — all decoded right in your browser.</p>
+  </div>
+
+  <div class="warn-banner" id="insecure-banner">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    <span>Live camera scanning needs a secure connection (<b>https://</b> or <b>localhost</b>) — it won't work when this file is opened directly from your device. <b>Take Photo</b> and <b>Upload Image</b> below work fine either way.</span>
   </div>
 
   <!-- ============ Scanner card ============ -->
@@ -216,7 +232,11 @@ footer .sep{opacity:.4;margin:0 6px;}
     <div class="mode-tabs">
       <button class="mode-tab active" id="tab-camera" onclick="switchMode('camera')">
         <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-        Camera
+        Live Camera
+      </button>
+      <button class="mode-tab" id="tab-photo" onclick="switchMode('photo')">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M4 8V6a2 2 0 0 1 2-2h2M4 16v2a2 2 0 0 0 2 2h2M20 8V6a2 2 0 0 0-2-2h-2M20 16v2a2 2 0 0 1-2 2h-2"/></svg>
+        Take Photo
       </button>
       <button class="mode-tab" id="tab-upload" onclick="switchMode('upload')">
         <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
@@ -224,36 +244,70 @@ footer .sep{opacity:.4;margin:0 6px;}
       </button>
     </div>
 
-    <!-- Camera mode -->
+    <!-- Live camera mode -->
     <div id="camera-mode">
       <div class="cam-controls">
-        <select id="camera-select"></select>
-        <button class="icon-toggle" id="torch-btn" onclick="toggleTorch()" title="Toggle flashlight" aria-label="Toggle flashlight">
+        <select id="camera-select" disabled><option>Camera not enabled yet</option></select>
+        <button class="icon-toggle" id="torch-btn" onclick="toggleTorch()" title="Toggle flashlight" aria-label="Toggle flashlight" disabled>
           <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8z"/></svg>
         </button>
       </div>
 
-      <div class="viewfinder idle" id="viewfinder">
+      <div class="viewfinder" id="viewfinder">
         <div id="reader"></div>
         <div class="frame">
           <span class="corner tl"></span><span class="corner tr"></span>
           <span class="corner bl"></span><span class="corner br"></span>
           <div class="scan-line"></div>
         </div>
-        <div class="idle-msg">Tap "Start Camera" below to begin scanning.</div>
+
+        <div class="vf-overlay show" id="vf-gate">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+          <p>Camera access is required to scan live. Nothing is recorded or sent anywhere — decoding happens on this device only.</p>
+          <button class="vf-btn" onclick="requestCameraAccess()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            Enable Camera
+          </button>
+        </div>
+
+        <div class="vf-overlay" id="vf-error">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+          <p class="err-text" id="vf-error-text">Camera permission was denied.</p>
+          <button class="vf-btn" onclick="requestCameraAccess()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+            Try Again
+          </button>
+        </div>
       </div>
 
-      <button class="scan-btn" id="camera-toggle-btn" onclick="toggleCamera()">
+      <button class="scan-btn" id="camera-toggle-btn" onclick="toggleCamera()" style="display:none;">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
         Start Camera
       </button>
+
+      <div class="scan-hint" id="scan-hint">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        <span>Struggling to focus? Try <b>Take Photo</b> — your phone's camera app has zoom &amp; macro modes built in.</span>
+        <button onclick="dismissHint()" aria-label="Dismiss">✕</button>
+      </div>
+    </div>
+
+    <!-- Take photo mode -->
+    <div id="photo-mode" style="display:none;">
+      <label class="capture-zone active" for="capture-input">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        <span>Tap to open your phone's camera app</span>
+        <small>Use its zoom or macro mode for small, glossy or distant codes, then scan the photo</small>
+        <input type="file" id="capture-input" accept="image/*" capture="environment" onchange="handleFileUpload(event)">
+      </label>
     </div>
 
     <!-- Upload mode -->
     <div id="upload-mode" style="display:none;">
-      <label class="upload-zone active" id="upload-zone" for="file-input">
+      <label class="capture-zone active" for="file-input">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-        <span>Tap to choose an image, or drag one here</span>
+        <span>Tap to choose an existing image</span>
+        <small>Pick a saved photo or screenshot containing a code</small>
         <input type="file" id="file-input" accept="image/*" onchange="handleFileUpload(event)">
       </label>
     </div>
@@ -294,14 +348,14 @@ footer .sep{opacity:.4;margin:0 6px;}
         <p>Reads QR codes plus common barcodes: EAN, UPC, Code 128, Code 39, ITF and more.</p>
       </div>
       <div class="feature">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-        <h3>Camera or photo</h3>
-        <p>Scan live with your camera, or upload a picture of a code from your gallery.</p>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M4 8V6a2 2 0 0 1 2-2h2M4 16v2a2 2 0 0 0 2 2h2M20 8V6a2 2 0 0 0-2-2h-2M20 16v2a2 2 0 0 1-2 2h-2"/></svg>
+        <h3>Three ways to scan</h3>
+        <p>Live camera, a photo from your phone's own camera app (zoom/macro included), or an existing image.</p>
       </div>
       <div class="feature">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
         <h3>Smart actions</h3>
-        <p>Detects links, phone numbers, emails, Wi-Fi credentials and contact cards automatically.</p>
+        <p>Links open or copy in one tap; barcodes get a "Search Online" lookup; Wi-Fi, email, phone and contact cards get matching quick actions.</p>
       </div>
       <div class="feature">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4.5 8-11V5l-8-3-8 3v6c0 6.5 8 11 8 11z"/></svg>
@@ -316,7 +370,7 @@ footer .sep{opacity:.4;margin:0 6px;}
       <div class="feature">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
         <h3>Scan history</h3>
-        <p>Your recent scans stay saved on this device so you can revisit or copy them anytime.</p>
+        <p>Your recent scans stay saved on this device so you can revisit, copy or delete them anytime.</p>
       </div>
     </div>
   </div>
@@ -327,19 +381,19 @@ footer .sep{opacity:.4;margin:0 6px;}
 
     <div class="guide-step">
       <span class="num">01</span>
-      <div><h3>Choose a mode</h3><p>Pick "Camera" to scan live, or "Upload Image" to decode a photo already saved on your phone.</p></div>
+      <div><h3>Pick a mode</h3><p>"Live Camera" scans in real time. "Take Photo" opens your phone's own camera app — handy when a code needs zoom or macro focus. "Upload Image" reads a code from a saved picture.</p></div>
     </div>
     <div class="guide-step">
       <span class="num">02</span>
-      <div><h3>Grant camera access</h3><p>Tap "Start Camera" and allow the browser permission prompt. Your browser only sends video to this page — never to a server.</p></div>
+      <div><h3>Grant camera access (Live Camera only)</h3><p>Tap "Enable Camera" and accept the browser's permission prompt. This must be done manually once per session — browsers won't start the camera without it.</p></div>
     </div>
     <div class="guide-step">
       <span class="num">03</span>
-      <div><h3>Align the code</h3><p>Hold the QR code or barcode inside the bracket guides, roughly filling the frame, and keep your hand steady.</p></div>
+      <div><h3>Align the code</h3><p>Hold the QR code or barcode inside the bracket guides, filling most of the frame, and keep your hand steady until it locks on.</p></div>
     </div>
     <div class="guide-step">
       <span class="num">04</span>
-      <div><h3>Read the result</h3><p>Once decoded, the content type is shown as a badge, and matching quick actions appear — open a link, call a number, save a contact, and more.</p></div>
+      <div><h3>Read the result</h3><p>The content type shows as a badge, with matching actions underneath — open or copy a link, search a barcode online, call a number, save a contact, and more.</p></div>
     </div>
     <div class="guide-step">
       <span class="num">05</span>
@@ -357,7 +411,7 @@ footer .sep{opacity:.4;margin:0 6px;}
     <span class="sep">|</span>
     <a href="mailto:mohamed005cheikh@gmail.com">mohamed005cheikh@gmail.com</a>
     <span class="sep">|</span>
-    <span>BY MC88</span>
+    <span>by MC88</span>
   </footer>
 </div>
 
@@ -374,6 +428,7 @@ let isScanning = false;
 let torchOn = false;
 let currentMode = 'camera';
 let history = [];
+let hintTimer = null;
 
 const { Html5Qrcode, Html5QrcodeSupportedFormats } = window;
 
@@ -400,32 +455,9 @@ window.addEventListener('DOMContentLoaded', () => {
   loadHistory();
   renderHistory();
 
-  Html5Qrcode.getCameras().then(devices => {
-    cameras = devices || [];
-    const select = document.getElementById('camera-select');
-    select.innerHTML = '';
-    if(cameras.length === 0){
-      select.innerHTML = '<option value="">No camera found</option>';
-      return;
-    }
-    cameras.forEach((cam, i) => {
-      const opt = document.createElement('option');
-      opt.value = cam.id;
-      opt.text = cam.label || `Camera ${i + 1}`;
-      select.appendChild(opt);
-    });
-    // Prefer a back/rear camera by default
-    const back = cameras.find(c => /back|rear|environment/i.test(c.label));
-    currentCameraId = back ? back.id : cameras[0].id;
-    select.value = currentCameraId;
-  }).catch(() => {
-    document.getElementById('camera-select').innerHTML = '<option value="">Camera permission needed</option>';
-  });
-
-  document.getElementById('camera-select').addEventListener('change', (e) => {
-    currentCameraId = e.target.value;
-    if(isScanning){ stopCamera().then(startCamera); }
-  });
+  if(!window.isSecureContext){
+    document.getElementById('insecure-banner').classList.add('show');
+  }
 });
 
 /* ============================================================
@@ -434,48 +466,105 @@ window.addEventListener('DOMContentLoaded', () => {
 function switchMode(mode){
   currentMode = mode;
   document.getElementById('tab-camera').classList.toggle('active', mode === 'camera');
+  document.getElementById('tab-photo').classList.toggle('active', mode === 'photo');
   document.getElementById('tab-upload').classList.toggle('active', mode === 'upload');
   document.getElementById('camera-mode').style.display = mode === 'camera' ? 'block' : 'none';
+  document.getElementById('photo-mode').style.display = mode === 'photo' ? 'block' : 'none';
   document.getElementById('upload-mode').style.display = mode === 'upload' ? 'block' : 'none';
-  if(mode === 'upload' && isScanning) stopCamera();
+  if(mode !== 'camera' && isScanning) stopCamera();
 }
 
 /* ============================================================
-   Camera scanning
+   Camera permission + scanning
    ============================================================ */
+function requestCameraAccess(){
+  document.getElementById('vf-error').classList.remove('show');
+
+  if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
+    showCameraError('Camera API not available in this browser.');
+    return;
+  }
+
+  Html5Qrcode.getCameras().then(devices => {
+    cameras = devices || [];
+    if(cameras.length === 0){
+      showCameraError('No camera was found on this device.');
+      return;
+    }
+    const select = document.getElementById('camera-select');
+    select.innerHTML = '';
+    cameras.forEach((cam, i) => {
+      const opt = document.createElement('option');
+      opt.value = cam.id;
+      opt.text = cam.label || `Camera ${i + 1}`;
+      select.appendChild(opt);
+    });
+    select.disabled = false;
+    document.getElementById('torch-btn').disabled = false;
+
+    const back = cameras.find(c => /back|rear|environment/i.test(c.label));
+    currentCameraId = back ? back.id : cameras[0].id;
+    select.value = currentCameraId;
+
+    document.getElementById('vf-gate').classList.remove('show');
+    document.getElementById('camera-toggle-btn').style.display = 'flex';
+    startCamera();
+  }).catch(err => {
+    console.error(err);
+    let msg = 'Camera permission was denied. Enable it from your browser\'s site settings and try again.';
+    if(!window.isSecureContext){
+      msg = 'This page isn\'t running on a secure connection, so the browser is blocking camera access. Try "Take Photo" or "Upload Image" instead.';
+    }
+    showCameraError(msg);
+  });
+}
+
+function showCameraError(msg){
+  document.getElementById('vf-gate').classList.remove('show');
+  document.getElementById('vf-error-text').textContent = msg;
+  document.getElementById('vf-error').classList.add('show');
+}
+
+document.getElementById('camera-select').addEventListener('change', (e) => {
+  currentCameraId = e.target.value;
+  if(isScanning){ stopCamera().then(startCamera); }
+});
+
 function toggleCamera(){
   if(isScanning){ stopCamera(); } else { startCamera(); }
 }
 
 function startCamera(){
-  if(!currentCameraId){ showToast('No camera available.'); return; }
+  if(!currentCameraId) return;
   html5QrCode = new Html5Qrcode('reader', { formatsToSupport: SUPPORTED_FORMATS, verbose: false });
 
   html5QrCode.start(
     currentCameraId,
     { fps: 10, qrbox: { width: 240, height: 240 } },
     onScanSuccess,
-    () => {} // ignore per-frame scan failures
+    () => {}
   ).then(() => {
     isScanning = true;
-    document.getElementById('viewfinder').classList.remove('idle');
+    document.getElementById('viewfinder').classList.add('scanning');
     const btn = document.getElementById('camera-toggle-btn');
     btn.classList.add('stop');
     btn.innerHTML = stopIconSvg() + 'Stop Camera';
+    startHintTimer();
   }).catch(err => {
     console.error(err);
-    showToast('Camera access denied or unavailable.');
+    showCameraError('Could not start the camera. It may be in use by another app.');
   });
 }
 
 function stopCamera(){
   if(!html5QrCode) return Promise.resolve();
+  clearHintTimer();
   return html5QrCode.stop().then(() => {
     html5QrCode.clear();
     isScanning = false;
     torchOn = false;
     document.getElementById('torch-btn').classList.remove('on');
-    document.getElementById('viewfinder').classList.add('idle');
+    document.getElementById('viewfinder').classList.remove('scanning');
     const btn = document.getElementById('camera-toggle-btn');
     btn.classList.remove('stop');
     btn.innerHTML = startIconSvg() + 'Start Camera';
@@ -486,30 +575,32 @@ function toggleTorch(){
   if(!html5QrCode || !isScanning){ showToast('Start the camera first.'); return; }
   torchOn = !torchOn;
   html5QrCode.applyVideoConstraints({ advanced: [{ torch: torchOn }] })
-    .then(() => {
-      document.getElementById('torch-btn').classList.toggle('on', torchOn);
-    })
-    .catch(() => {
-      showToast('Flashlight not supported on this device.');
-      torchOn = !torchOn;
-    });
+    .then(() => document.getElementById('torch-btn').classList.toggle('on', torchOn))
+    .catch(() => { showToast('Flashlight not supported on this device.'); torchOn = !torchOn; });
 }
 
-function startIconSvg(){
-  return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>';
+function startIconSvg(){ return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>'; }
+function stopIconSvg(){ return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>'; }
+
+/* Hint: nudge toward "Take Photo" if live scanning drags on */
+function startHintTimer(){
+  clearHintTimer();
+  hintTimer = setTimeout(() => document.getElementById('scan-hint').classList.add('show'), 9000);
 }
-function stopIconSvg(){
-  return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>';
+function clearHintTimer(){
+  clearTimeout(hintTimer);
+  document.getElementById('scan-hint').classList.remove('show');
 }
+function dismissHint(){ document.getElementById('scan-hint').classList.remove('show'); }
 
 /* ============================================================
-   Upload scanning
+   Photo / Upload scanning
    ============================================================ */
 function handleFileUpload(event){
   const file = event.target.files[0];
   if(!file) return;
 
-  const scanner = new Html5Qrcode('reader', { formatsToSupport: SUPPORTED_FORMATS, verbose: false });
+  const scanner = new Html5Qrcode('reader-file', { formatsToSupport: SUPPORTED_FORMATS, verbose: false });
   scanner.scanFile(file, false)
     .then(decodedText => {
       onScanSuccess(decodedText, { result: { format: { formatName: 'IMAGE' } } });
@@ -530,14 +621,12 @@ function onScanSuccess(decodedText, decodedResult){
   let format = 'CODE';
   try{ format = decodedResult.result.format.formatName || 'CODE'; }catch(e){}
 
+  clearHintTimer();
   if(document.getElementById('opt-sound').checked) playBeep();
   if(document.getElementById('opt-vibrate').checked && navigator.vibrate) navigator.vibrate(80);
 
   showResult(decodedText, format);
-
-  if(document.getElementById('opt-history').checked){
-    addToHistory(decodedText, format);
-  }
+  if(document.getElementById('opt-history').checked) addToHistory(decodedText, format);
 
   const type = classify(decodedText);
   if(type === 'url' && document.getElementById('opt-autoopen').checked){
@@ -589,29 +678,33 @@ function showResult(text, format){
   textEl.textContent = text;
   actions.innerHTML = '';
 
-  actions.appendChild(makeBtn('Copy', copyIcon(), () => copyText(text), true));
+  actions.appendChild(makeBtn('Copy', copyIcon(), () => copyText(text)));
 
   if(type === 'url'){
-    actions.appendChild(makeBtn('Open Link', linkIcon(), () => window.open(text, '_blank', 'noopener')));
+    actions.appendChild(makeBtn('Open in New Tab', linkIcon(), () => window.open(text, '_blank', 'noopener'), true));
   }else if(type === 'email'){
     const addr = text.replace(/^mailto:/i, '');
-    actions.appendChild(makeBtn('Send Email', mailIcon(), () => window.location.href = 'mailto:' + addr));
+    actions.appendChild(makeBtn('Send Email', mailIcon(), () => window.location.href = 'mailto:' + addr, true));
   }else if(type === 'phone'){
     const num = text.replace(/^tel:/i, '');
-    actions.appendChild(makeBtn('Call', phoneIcon(), () => window.location.href = 'tel:' + num));
+    actions.appendChild(makeBtn('Call', phoneIcon(), () => window.location.href = 'tel:' + num, true));
   }else if(type === 'wifi'){
     const w = parseWifi(text);
-    actions.appendChild(makeBtn('Copy Password', keyIcon(), () => copyText(w.pass)));
+    actions.appendChild(makeBtn('Copy Password', keyIcon(), () => copyText(w.pass), true));
     const note = document.createElement('div');
     note.style.cssText = 'width:100%;font-size:.75rem;color:var(--text-dim);margin-top:4px;';
     note.textContent = `Network: ${w.ssid || '—'} · Security: ${w.type || '—'}. Copy the password, then join manually in your Wi-Fi settings.`;
     actions.appendChild(note);
   }else if(type === 'vcard'){
-    actions.appendChild(makeBtn('Save Contact', contactIcon(), () => downloadVcf(text)));
+    actions.appendChild(makeBtn('Save Contact', contactIcon(), () => downloadVcf(text), true));
+  }else{
+    // Plain text or a product barcode — offer a web search, primary when it's not a QR code
+    actions.appendChild(makeBtn('Search Online', searchIcon(), () => {
+      window.open('https://www.google.com/search?q=' + encodeURIComponent(text), '_blank', 'noopener');
+    }, format !== 'QR_CODE'));
   }
 
-  actions.appendChild(makeBtn('Scan Again', againIcon(), () => { panel.classList.remove('show'); }));
-
+  actions.appendChild(makeBtn('Scan Again', againIcon(), () => panel.classList.remove('show')));
   panel.classList.add('show');
 }
 
@@ -624,23 +717,21 @@ function makeBtn(label, iconSvg, onClick, primary){
 }
 function copyIcon(){ return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>'; }
 function linkIcon(){ return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>'; }
-function mailIcon(){ return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z" style="display:none"/><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="22 6 12 13 2 6"/></svg>'; }
+function mailIcon(){ return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="22 6 12 13 2 6"/></svg>'; }
 function phoneIcon(){ return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.33 1.79.63 2.65a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.43-1.43a2 2 0 0 1 2.11-.45c.86.3 1.75.51 2.65.63A2 2 0 0 1 22 16.92z"/></svg>'; }
 function keyIcon(){ return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="7" cy="17" r="4"/><path d="M10.5 14 20 4.5"/><path d="M17 8l2 2"/></svg>'; }
 function contactIcon(){ return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>'; }
+function searchIcon(){ return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>'; }
 function againIcon(){ return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>'; }
 
 function copyText(text){
   navigator.clipboard.writeText(text).then(() => showToast('Copied to clipboard.')).catch(() => showToast('Copy failed.'));
 }
-
 function downloadVcf(vcardText){
   const blob = new Blob([vcardText], { type: 'text/vcard' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
-  a.href = url;
-  a.download = 'contact.vcf';
-  a.click();
+  a.href = url; a.download = 'contact.vcf'; a.click();
   URL.revokeObjectURL(url);
 }
 
@@ -665,10 +756,7 @@ function renderHistory(){
   const empty = document.getElementById('history-empty');
   list.querySelectorAll('.history-item').forEach(el => el.remove());
 
-  if(history.length === 0){
-    empty.style.display = 'block';
-    return;
-  }
+  if(history.length === 0){ empty.style.display = 'block'; return; }
   empty.style.display = 'none';
 
   history.forEach((item, idx) => {
@@ -680,10 +768,11 @@ function renderHistory(){
       <span class="htime">${item.time.split(',')[1] ? item.time.split(',')[1].trim() : item.time}</span>
     `;
     const delBtn = document.createElement('button');
+    delBtn.className = 'del';
     delBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
-    delBtn.onclick = () => { history.splice(idx, 1); saveHistory(); renderHistory(); };
+    delBtn.onclick = (e) => { e.stopPropagation(); history.splice(idx, 1); saveHistory(); renderHistory(); };
     row.appendChild(delBtn);
-    row.addEventListener('click', (e) => { if(e.target.closest('button')) return; showResult(item.text, item.format); window.scrollTo({top:0,behavior:'smooth'}); });
+    row.addEventListener('click', () => { showResult(item.text, item.format); window.scrollTo({top:0,behavior:'smooth'}); });
     list.appendChild(row);
   });
 }
@@ -709,5 +798,8 @@ function showToast(msg){
   setTimeout(() => toast.classList.remove('show'), 2600);
 }
 </script>
+
+<!-- Hidden helper container used only for one-off file/photo decoding, kept out of layout -->
+<div id="reader-file" style="display:none;"></div>
 </body>
-  </html>
+</html>
