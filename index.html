@@ -13,7 +13,16 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-<script src="https://unpkg.com/html5-qrcode"></script>
+<script>
+function loadFallbackScanLib(){
+  var s = document.createElement('script');
+  s.src = 'https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js';
+  s.onload = function(){ if(window.onScanLibReady) window.onScanLibReady(); };
+  s.onerror = function(){ if(window.onScanLibFailed) window.onScanLibFailed(); };
+  document.head.appendChild(s);
+}
+</script>
+<script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js" onerror="window.__mc88LibPrimaryFailed=true;loadFallbackScanLib();"></script>
 
 <style>
 :root{
@@ -225,6 +234,11 @@ footer .sep{opacity:.4;margin:0 6px;}
     <span>Live camera scanning needs a secure connection (<b>https://</b> or <b>localhost</b>) — it won't work when this file is opened directly from your device. <b>Take Photo</b> and <b>Upload Image</b> below work fine either way.</span>
   </div>
 
+  <div class="warn-banner" id="lib-banner">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    <span>The scanning engine couldn't load — this is usually a blocked script, a privacy/ad blocker, or a weak connection. Camera, Take Photo and Upload Image all need it. <button id="lib-retry-btn" onclick="location.reload()" style="background:none;border:none;color:inherit;text-decoration:underline;font-weight:800;cursor:pointer;padding:0;font-size:inherit;">Tap to retry</button></span>
+  </div>
+
   <!-- ============ Scanner card ============ -->
   <div class="card">
     <h2><span class="idx">01</span> Scanner</h2>
@@ -385,7 +399,7 @@ footer .sep{opacity:.4;margin:0 6px;}
     </div>
     <div class="guide-step">
       <span class="num">02</span>
-      <div><h3>Grant camera access (Live Camera only)</h3><p>Tap "Enable Camera" and accept the browser's permission prompt. This must be done manually once per session — browsers won't start the camera without it.</p></div>
+      <div><h3>Grant camera access (Live Camera only)</h3><p>Tap "Enable Camera" and accept the browser's permission prompt. Whether your browser remembers that choice for next time (or asks again) is controlled by your browser's own site settings, not by this page — look for a padlock or site-info icon in the address bar to make it permanent.</p></div>
     </div>
     <div class="guide-step">
       <span class="num">03</span>
@@ -430,23 +444,25 @@ let currentMode = 'camera';
 let history = [];
 let hintTimer = null;
 
-const { Html5Qrcode, Html5QrcodeSupportedFormats } = window;
-
-const SUPPORTED_FORMATS = [
-  Html5QrcodeSupportedFormats.QR_CODE,
-  Html5QrcodeSupportedFormats.AZTEC,
-  Html5QrcodeSupportedFormats.DATA_MATRIX,
-  Html5QrcodeSupportedFormats.PDF_417,
-  Html5QrcodeSupportedFormats.CODE_128,
-  Html5QrcodeSupportedFormats.CODE_39,
-  Html5QrcodeSupportedFormats.CODE_93,
-  Html5QrcodeSupportedFormats.CODABAR,
-  Html5QrcodeSupportedFormats.EAN_13,
-  Html5QrcodeSupportedFormats.EAN_8,
-  Html5QrcodeSupportedFormats.UPC_A,
-  Html5QrcodeSupportedFormats.UPC_E,
-  Html5QrcodeSupportedFormats.ITF
-];
+/* The scanning library attaches itself to window.Html5Qrcode / window.Html5QrcodeSupportedFormats.
+   We never assume it's there — every place that needs it checks first, so a blocked or slow
+   script degrades to a clear, actionable message instead of a silent dead button. */
+function libIsReady(){
+  return typeof window.Html5Qrcode !== 'undefined' && typeof window.Html5QrcodeSupportedFormats !== 'undefined';
+}
+function getSupportedFormats(){
+  const F = window.Html5QrcodeSupportedFormats;
+  return [
+    F.QR_CODE, F.AZTEC, F.DATA_MATRIX, F.PDF_417,
+    F.CODE_128, F.CODE_39, F.CODE_93, F.CODABAR,
+    F.EAN_13, F.EAN_8, F.UPC_A, F.UPC_E, F.ITF
+  ];
+}
+function showLibBanner(show){
+  document.getElementById('lib-banner').classList.toggle('show', show);
+}
+window.onScanLibReady = function(){ showLibBanner(false); };
+window.onScanLibFailed = function(){ showLibBanner(true); };
 
 /* ============================================================
    Init
@@ -458,6 +474,10 @@ window.addEventListener('DOMContentLoaded', () => {
   if(!window.isSecureContext){
     document.getElementById('insecure-banner').classList.add('show');
   }
+
+  // Give a same-page fallback script (if the primary one errored) a brief moment to land
+  // before deciding the library truly failed to load.
+  setTimeout(() => { if(!libIsReady()) showLibBanner(true); }, 1200);
 });
 
 /* ============================================================
@@ -479,6 +499,12 @@ function switchMode(mode){
    ============================================================ */
 function requestCameraAccess(){
   document.getElementById('vf-error').classList.remove('show');
+
+  if(!libIsReady()){
+    showLibBanner(true);
+    showCameraError('The scanning engine hasn\'t loaded yet. Check your connection or any script/ad blocker, then tap "Try Again".');
+    return;
+  }
 
   if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
     showCameraError('Camera API not available in this browser.');
@@ -536,7 +562,7 @@ function toggleCamera(){
 
 function startCamera(){
   if(!currentCameraId) return;
-  html5QrCode = new Html5Qrcode('reader', { formatsToSupport: SUPPORTED_FORMATS, verbose: false });
+  html5QrCode = new Html5Qrcode('reader', { formatsToSupport: getSupportedFormats(), verbose: false });
 
   html5QrCode.start(
     currentCameraId,
@@ -600,7 +626,14 @@ function handleFileUpload(event){
   const file = event.target.files[0];
   if(!file) return;
 
-  const scanner = new Html5Qrcode('reader-file', { formatsToSupport: SUPPORTED_FORMATS, verbose: false });
+  if(!libIsReady()){
+    showLibBanner(true);
+    showToast('Scanning engine not loaded yet — check your connection and try again.');
+    event.target.value = '';
+    return;
+  }
+
+  const scanner = new Html5Qrcode('reader-file', { formatsToSupport: getSupportedFormats(), verbose: false });
   scanner.scanFile(file, false)
     .then(decodedText => {
       onScanSuccess(decodedText, { result: { format: { formatName: 'IMAGE' } } });
