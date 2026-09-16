@@ -1,248 +1,119 @@
-# 📷 Scanner MC88 — Lecteur QR & Code-Barres
+<div align="center">
 
-**Scanner MC88** est un scanner de QR codes et de codes-barres professionnel qui fonctionne entièrement dans votre navigateur. Il propose trois modes de numérisation : caméra en direct, prise de photo via l'appareil photo natif, et téléchargement d'image existante. Tout le décodage est effectué localement sur votre appareil.
+# 📷 Scanner MC88
 
----
+**Scannez n'importe quel code, sans jamais quitter votre navigateur.**
 
-## 📋 Prérequis
-
-1. Un navigateur web moderne (Chrome, Firefox, Edge, Safari, Brave, Opera)
-2. Pour le mode **caméra en direct** : connexion sécurisée (`https://` ou `localhost`)
-3. Pour **Prendre une photo** et **Télécharger une image** : aucun prérequis spécial
-4. Aucune installation de logiciel nécessaire
+</div>
 
 ---
 
-## 🚀 Guide d'installation
+## 👋 Bienvenue
 
-### Étape 1 : Télécharger le fichier
+Scanner MC88 est un petit outil qui fait une chose, et la fait bien : lire les codes.
 
-1. Téléchargez le fichier `scanner-mc88.html` sur votre ordinateur
-2. Placez-le dans un dossier de votre choix
+Un QR code sur une affiche, un code-barres sur un produit, une carte de visite, un réseau Wi-Fi collé au mur d'un café — vous le visez, et l'outil vous dit ce qu'il contient. Puis il vous propose ce qu'il faut en faire : ouvrir le lien, appeler le numéro, ajouter le contact, copier le mot de passe Wi-Fi.
 
-### Étape 2 : Lancer l'application
-
-**Méthode simple (fonctionnalités photo/upload) :**
-- Double-cliquez sur le fichier
-- Les modes **Prendre une photo** et **Télécharger une image** fonctionnent immédiatement
-
-**Pour le mode caméra en direct (nécessite HTTPS) :**
-- Utilisez un serveur local : VS Code Live Server, Python `http.server`, etc.
-- Ou hébergez le fichier sur un site HTTPS (GitHub Pages, Netlify, Vercel…)
-- Le mode caméra est bloqué par les navigateurs sur `file://` pour des raisons de sécurité
+Trois façons de scanner : avec la caméra en direct, en prenant une photo, ou en important une image que vous avez déjà. Et **tout se passe sur votre appareil** — aucune image, aucun résultat n'est envoyé nulle part.
 
 ---
 
-## 🎯 Guide d'utilisation détaillé
+## 📸 Un aperçu
 
-### 🔹 Étape 1 : Choisir un mode de numérisation
+<div align="center">
+  <img src="https://github.com/mohamed005cheikh-rgb/scanner-mc88/raw/main/images/Sc1.png" alt="Caméra en direct avec cadre de visée" width="100%" />
+</div>
 
-L'application propose **3 modes** :
+<br />
 
-#### 📹 Mode Caméra en Direct
-1. Cliquez sur l'onglet **"Live Camera"**
-2. Cliquez sur **"Enable Camera"** pour autoriser l'accès
-3. Choisissez la caméra (avant/arrière) dans le menu déroulant
-4. Cliquez sur **"Start Camera"**
-5. Alignez le code dans le cadre de visée
+<div align="center">
+  <img src="https://github.com/mohamed005cheikh-rgb/scanner-mc88/raw/main/images/Sc2.png" alt="Résultat du scan avec actions contextuelles" width="100%" />
+</div>
 
-#### 📸 Mode Prendre une Photo
-1. Cliquez sur l'onglet **"Take Photo"**
-2. Cliquez sur la zone de capture
-3. L'appareil photo natif de votre téléphone s'ouvre
-4. Prenez la photo (utilisez le zoom si nécessaire)
-5. Le scan se fait automatiquement
+<br />
 
-#### 📤 Mode Télécharger une Image
-1. Cliquez sur l'onglet **"Upload Image"**
-2. Cliquez sur la zone de téléchargement
-3. Choisissez une image existante contenant un code
-4. Le scan se fait automatiquement
+<div align="center">
+  <img src="https://github.com/mohamed005cheikh-rgb/scanner-mc88/raw/main/images/Sr1.gif" alt="Scanner un QR code avec la caméra" width="100%" />
+</div>
+
+<br />
+
+<div align="center">
+  <img src="https://github.com/mohamed005cheikh-rgb/scanner-mc88/raw/main/images/Sr2.gif" alt="Scanner depuis une image existante" width="100%" />
+</div>
 
 ---
 
-### 🔹 Étape 2 : Lire le résultat
+## ✨ Ce que vous trouverez
 
-Après un scan réussi, le panneau de résultat affiche :
+**Trois façons de scanner, selon le moment.**  
+Avec la **caméra en direct** — vous visez le code, il est lu. En **prenant une photo** — l'appareil natif de votre téléphone s'ouvre, vous cadrez tranquillement, et le scan se fait à partir de l'image capturée. Ou en **important une image** que vous avez déjà sur votre appareil. Trois chemins, un seul résultat.
 
-| Élément | Description |
-|---------|-------------|
-| **Badge** | Type de code détecté (QR_CODE, EAN_13, CODE_128…) |
-| **Texte** | Le contenu décodé complet |
-| **Actions** | Boutons contextuels selon le type de contenu |
+**Une lampe torche quand la lumière manque.**  
+Un petit éclair en haut de l'écran allume la torche de votre téléphone — précieux pour lire un code dans un couloir sombre, un parking, ou une cave. La fonction dépend de l'appareil, mais quand elle fonctionne, elle change tout.
 
-**Actions intelligentes selon le contenu :**
+**Le bon geste, proposé au bon moment.**  
+Un scanner classique se contente d'afficher du texte. Celui-ci comprend ce qu'il lit et propose l'action appropriée : **ouvrir** le lien dans un nouvel onglet, **appeler** le numéro, **envoyer un email** à l'adresse détectée, **enregistrer** la carte de visite directement au format vCard, ou **copier** le mot de passe d'un réseau Wi-Fi — avec le nom du réseau et son type de sécurité. Pour tout le reste, un bouton de recherche en ligne prend le relais.
 
-| Type | Actions disponibles |
-|------|---------------------|
-| **URL** | Ouvrir dans un nouvel onglet, Copier |
-| **Email** | Envoyer un email, Copier |
-| **Téléphone** | Appeler, Copier |
-| **Wi-Fi** | Copier le mot de passe (avec infos réseau) |
-| **vCard** | Enregistrer le contact (.vcf), Copier |
-| **Texte/Code-barres** | Rechercher en ligne, Copier |
+**Un son, une vibration — discrets.**  
+Chaque scan réussi peut s'accompagner d'un petit bip, d'une vibration, ou des deux. Utile quand vous scannez en rafale et que vous ne regardez pas toujours l'écran. Ces retours sont désactivables d'un clic.
 
----
+**Un historique qui se souvient.**  
+Vos cinquante derniers scans sont conservés dans l'appareil. Vous pouvez les rouvrir d'un clic pour retrouver un lien égaré, ou les effacer un à un. Rien ne part ailleurs — tout reste local.
 
-### 🔹 Étape 3 : Configurer les options
-
-| Option | Description |
-|--------|-------------|
-| **Beep on scan** | Joue un son à chaque scan réussi |
-| **Vibrate on scan** | Vibre à chaque scan (mobile uniquement) |
-| **Auto-open links** | Ouvre automatiquement les URLs (désactivé par défaut) |
-| **Save history** | Enregistre l'historique des scans |
+**Les codes du quotidien, tous lus.**  
+QR, Aztec, Data Matrix, PDF 417, Code 128, Code 39, EAN-13, UPC-A… treize formats, des QR codes que vous croisez partout aux codes-barres sur les cartons d'emballage.
 
 ---
 
-### 🔹 Étape 4 : Utiliser la lampe torche
+## 🧭 Comment ça marche
 
-1. Cliquez sur l'icône **éclair** ⚡
-2. Active la lampe torche de votre appareil
-3. Utile pour scanner dans l'obscurité
-4. Support dépendant de l'appareil
+**1. Choisissez un mode.**  
+Trois onglets : *Live Camera*, *Take Photo*, *Upload Image*. Selon ce qui est le plus pratique — la caméra quand le code est devant vous, la photo quand il est loin ou mal éclairé, l'upload quand vous avez déjà une image sur votre appareil.
 
----
+**2. Visez, ou cadrez, ou déposez.**  
+Pour la caméra : alignez le code dans le cadre, il se lit tout seul. Pour la photo : l'appareil s'ouvre, vous prenez la photo, elle est analysée automatiquement. Pour l'upload : sélectionnez votre fichier.
 
-## 📊 Formats supportés
+**3. Faites quelque chose du résultat.**  
+Le contenu s'affiche, accompagné du bouton adapté — ouvrir, appeler, envoyer, copier, enregistrer. Un clic, et c'est fait.
 
-| Format | Type | Description |
-|--------|------|-------------|
-| **QR Code** | 2D | Le plus courant |
-| **Aztec** | 2D | Billets, documents |
-| **Data Matrix** | 2D | Industriel, composants |
-| **PDF 417** | 2D | Cartes d'identité, transport |
-| **Code 128** | 1D | Logistique, emballages |
-| **Code 39** | 1D | Industriel, militaire |
-| **Code 93** | 1D | Compact, sécurité |
-| **Codabar** | 1D | Bibliothèques, sang |
-| **EAN-13** | 1D | Produits européens |
-| **EAN-8** | 1D | Petits produits |
-| **UPC-A** | 1D | Produits américains |
-| **UPC-E** | 1D | Produits compacts |
-| **ITF** | 1D | Cartons, emballages |
+Rien à installer, rien à configurer, rien à apprendre. C'est un outil qu'on utilise en passant.
 
 ---
 
-## 🛠️ Guide de dépannage
+## 🛠️ Petits coups de main
 
-### Problème 1 : La caméra ne démarre pas
+**La caméra refuse de s'ouvrir ?**  
+Les navigateurs n'autorisent la caméra que sur une page **sécurisée** (`https://`) ou en local. Si vous avez ouvert le fichier directement depuis votre disque dur, utilisez plutôt les modes **Photo** ou **Upload** — ils fonctionnent partout, sans condition.
 
-**Cause** : Le fichier est ouvert en `file://` (pas de connexion sécurisée).
+**Le scanner tourne dans le vide ?**  
+Rapprochez-vous du code, assurez-vous qu'il est bien éclairé, et essayez un angle légèrement différent. Si le code est petit ou éloigné, le mode **Prendre une photo** avec le zoom de votre appareil donnera de bien meilleurs résultats.
 
-**Solution** :
-- Utilisez les modes **Prendre une photo** ou **Télécharger une image**
-- Ou lancez un serveur local (VS Code Live Server)
-- Ou hébergez le fichier sur HTTPS (GitHub Pages)
+**La lampe torche ne s'allume pas ?**  
+Tous les appareils n'exposent pas leur torche au navigateur. Sur ceux qui le font (la plupart des Android sous Chrome), tout fonctionne. Sur les iPhone, c'est plus aléatoire — utilisez la torche manuelle en attendant.
 
----
+**Rien ne se passe quand vous cliquez sur *Enable Camera* ?**  
+Peut-être qu'un bloqueur de publicité interfère avec la bibliothèque de scan. Essayez en désactivant temporairement votre bloqueur, ou rechargez la page. Un bouton *Tap to retry* apparaît si la bibliothèque n'a pas pu se charger du tout.
 
-### Problème 2 : La bibliothèque de scan ne charge pas
+**L'historique disparaît à chaque fermeture ?**  
+Vous êtes probablement en navigation privée, où le stockage local est désactivé. En fenêtre normale, vos scans restent en place.
 
-**Cause** : Script bloqué par un bloqueur de publicité ou connexion faible.
-
-**Solution** :
-- Désactivez temporairement votre bloqueur de publicité
-- Vérifiez votre connexion Internet
-- Rechargez la page (F5)
-- Le bouton **"Tap to retry"** apparaît si la bibliothèque échoue
+**Un lien ne s'ouvre pas tout seul après le scan ?**  
+C'est voulu. L'ouverture automatique est désactivée par défaut — une précaution élémentaire quand on scanne un code venu d'ailleurs. Vous pouvez l'activer dans les options, ou simplement cliquer sur *Open in New Tab* à chaque fois.
 
 ---
 
-### Problème 3 : Le code ne se scanne pas
+<div align="center">
 
-**Cause** : Mauvais éclairage, flou, ou code trop petit.
+### 📞 Une question, une idée ?
 
-**Solution** :
-- Utilisez le mode **Prendre une photo** avec le zoom natif
-- Rapprochez-vous du code
-- Assurez-vous que le code est bien éclairé
-- Essayez un angle différent
+[![Email](https://img.shields.io/badge/Email-mohamed005cheikh@gmail.com-d14836?style=flat-square&logo=gmail&logoColor=white)](mailto:mohamed005cheikh@gmail.com)
+[![WhatsApp](https://img.shields.io/badge/WhatsApp-+222_30_72_64_75-25D366?style=flat-square&logo=whatsapp&logoColor=white)](https://wa.me/22230726475)
 
----
+<br />
 
-### Problème 4 : La lampe torche ne fonctionne pas
+*Bon scan.*
 
-**Cause** : L'appareil ne supporte pas le contrôle de la torche via le navigateur.
+<sub>© 2026 Mohamed Cheikh — MC88</sub>
 
-**Solution** :
-- Utilisez la torche manuelle de votre téléphone
-- Essayez un autre navigateur (Chrome mobile)
-- Certains appareils iOS ne supportent pas cette fonction
-
----
-
-### Problème 5 : L'historique ne se sauvegarde pas
-
-**Cause** : Le stockage local est désactivé ou en navigation privée.
-
-**Solution** :
-- Vérifiez que le stockage local est activé
-- En navigation privée, l'historique sera réinitialisé
-- C'est un comportement normal
-
----
-
-### Problème 6 : Les liens ne s'ouvrent pas automatiquement
-
-**Cause** : L'option "Auto-open links" est désactivée (par défaut).
-
-**Solution** :
-- Activez l'option dans les paramètres
-- Ou cliquez sur **"Open in New Tab"** manuellement
-- La désactivation par défaut est une mesure de sécurité
-
----
-
-## 📋 Historique des scans
-
-- **50 scans** maximum sauvegardés
-- Stockage local persistant
-- Cliquez sur un élément pour le réafficher
-- Bouton **✕** pour supprimer un élément
-- Bouton **"Clear history"** pour tout effacer
-
----
-
-## 🔒 Confidentialité
-
-- **100% local** : Le décodage s'effectue entièrement dans votre navigateur
-- **Aucune donnée envoyée** : Aucune image ni résultat ne quitte votre appareil
-- **Aucun cookie** : Pas de suivi
-- **Stockage local** : Seul l'historique est sauvegardé localement
-
----
-
-## 📄 Copyright
-
-**© 2026**  
-📧 mohamed005cheikh@gmail.com  
-**Créé par MC88**  
-**Tous droits réservés**
-
----
-
-## 🔗 Bibliothèque utilisée
-
-- **html5-qrcode** v2.3.8 : Bibliothèque de décodage QR/barcode
-- Chargée depuis CDN avec fallback automatique
-- Supporte tous les formats listés ci-dessus
-
----
-
-## ✅ Fonctionnalités techniques
-
-- **3 modes de scan** : caméra, photo, upload
-- **13 formats** de codes supportés
-- **Torche** intégrée (si supportée)
-- **Actions intelligentes** selon le contenu
-- **Historique persistant** (50 entrées)
-- **Beep et vibration** configurables
-- **Détection de type** : URL, email, téléphone, Wi-Fi, vCard
-- **Design responsive** mobile-first
-- **Animations** de balayage et de logo
-- **Fallback CDN** automatique
-
----
-
-**Bon scan ! 📷✨**
+</div>
