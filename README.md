@@ -17,7 +17,7 @@ Un QR code sur une affiche, un code-barres sur un produit, une carte de visite, 
 Trois façons de scanner : avec la caméra en direct, en prenant une photo, ou en important une image que vous avez déjà. Et **tout se passe sur votre appareil** — aucune image, aucun résultat n'est envoyé nulle part.
 
 ---
-
+<!-- 
 ## 📸 Un aperçu
 
 <div align="center">
@@ -43,7 +43,7 @@ Trois façons de scanner : avec la caméra en direct, en prenant une photo, ou e
 </div>
 
 ---
-
+-->
 ## ✨ Ce que vous trouverez
 
 **Trois façons de scanner, selon le moment.**  
