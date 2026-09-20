@@ -115,5 +115,6 @@ C'est voulu. L'ouverture automatique est désactivée par défaut — une préca
 *Bon scan.*
 
 <sub>© 2026 Mohamed Cheikh — MC88</sub>
+**License:** Free for personal and educational use. Commercial use not permitted.
 
 </div>
